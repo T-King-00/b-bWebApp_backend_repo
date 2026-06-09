@@ -1,11 +1,8 @@
-﻿using BookingProject;
-using BookingProject.Booking;
+﻿using System.Text.Json.Serialization;
+using BookingProject;
 using BookingProject.Database;
 using BookingProject.Services;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,11 +12,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
+builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<HotelService>();
 
-//dp
-builder.Services.AddScoped<PropertyService>();
-builder.Services.AddScoped<IPropertyRepo, PropertyRepo>();
 builder.Services.AddLogging();
 
 //db

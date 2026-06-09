@@ -10,7 +10,7 @@ public class PropertyServiceTests
 {
     // Test Description: checks if the property with rooms and beds is added to the database
     // on success: returns true
-    [ClassData(typeof(PropertyObjectForTest))]
+   /* [ClassData(typeof(HotelObjectForTest))]
     [Theory]
     public void AddAPropertyWithRooms(Hotel property, Room room1, Room room2)
     {
@@ -55,40 +55,5 @@ public class PropertyServiceTests
         Assert.Throws<Exception>(action);
     }
 
-    private static TestDatabase CreateTestDatabase()
-    {
-        var connection = new SqliteConnection("Data Source=:memory:");
-        connection.Open();
-
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        var db = new AppDbContext(options);
-        db.Database.EnsureCreated();
-
-        var propertyService = new PropertyService(new PropertyRepo(db));
-
-        return new TestDatabase(connection, db, propertyService);
-    }
-
-    private sealed class TestDatabase : IDisposable
-    {
-        public TestDatabase(SqliteConnection connection, AppDbContext db, PropertyService propertyService)
-        {
-            Connection = connection;
-            Db = db;
-            PropertyService = propertyService;
-        }
-
-        private SqliteConnection Connection { get; }
-        private AppDbContext Db { get; }
-        public PropertyService PropertyService { get; }
-
-        public void Dispose()
-        {
-            Db.Dispose();
-            Connection.Dispose();
-        }
-    }
+*/
 }

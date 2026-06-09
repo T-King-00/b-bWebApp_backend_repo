@@ -3,36 +3,33 @@ using BookingProject;
 
 namespace BookingProject;
 
-public class PropertyObjectForTest:IEnumerable<object[]>
+public class HotelObjectForTest:IEnumerable<object[]>
 {
-
-    
-
     public IEnumerator<object[]> GetEnumerator()
     {
-        Hotel property = new Hotel("Danish Hotel",DateTime.Now);
-        property.Rooms = new List<Room>();
+        Hotel hotel = new Hotel( "Bed and breakfast" , DateTime.Now,"Copenhagen","Denmark");
+        hotel.Id = 1;
+        hotel.Rooms = new List<Room>();
         
         
         Room room1;
         
-        Bed bed=new Bed(BedType.Single,true,1);
+        Bed bed=new Bed(BedType.Single,1);
         List<Bed> beds = new List<Bed>();
         beds.Add(bed);
         Price price = new Price(500);
         room1=new Room(11,RoomType.SingleRoom,beds,price);
+        room1.Id = 1;
 
         Room room2;
-        Bed bed2=new Bed(BedType.Double,true,1);
+        Bed bed2=new Bed(BedType.Double,1);
         List<Bed> beds2 = new List<Bed>();
         beds.Add(bed2);
         room2=new (14,RoomType.DoubleRoom,beds2,price);
+        room2.Id = 2;
         
-        property.Rooms.Add(room1);
-        property.Rooms.Add(room2);
-        property.Id=11;
         
-        yield return new object[] {property,room1,room2};
+        yield return new object[] {hotel,room1,room2};
  
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BookingProject;
 
@@ -15,9 +16,16 @@ public  class Room
     
     
     //Navigation property
+    public int HotelId { get; set; }
+    [JsonIgnore]
     public Hotel Hotel{get;set;}
-    
     public Price Price{get;set;}
+    
+    [JsonIgnore]
+    public Booking.Booking? Booking{get;set;}
+
+    
+
     
     
     

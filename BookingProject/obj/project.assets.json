@@ -2635,11 +2635,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\B&B code\\backend0\\BookingProject\\BookingProject.csproj",
+      "projectUniqueName": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingProject\\BookingProject.csproj",
       "projectName": "BookingProject",
-      "projectPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\B&B code\\backend0\\BookingProject\\BookingProject.csproj",
+      "projectPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingProject\\BookingProject.csproj",
       "packagesPath": "C:\\Users\\tony_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\B&B code\\backend0\\BookingProject\\obj\\",
+      "outputPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingProject\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

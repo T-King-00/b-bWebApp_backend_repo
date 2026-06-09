@@ -6,19 +6,18 @@ public class Bed
 {
     public int Id{get;set;}
     public BedType Type{get;set;}
-    public bool Available{get;set;}
     public int Quantity{get;set;}
     
     //nav and reference
     [ForeignKey("RoomId")]
-
-    public Room Room { get; set; } = null!;
+    public int RoomId{get;set;}
+    
+    
     
 
-    public Bed(BedType type, bool available, int quantity)
+    public Bed(BedType type, int quantity)
     {
         Type = type;
-        Available = available;
         Quantity = quantity;
     }
     

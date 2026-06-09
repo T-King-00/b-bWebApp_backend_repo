@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8mXiKG1UImo=",
+  "dgSpecHash": "8DZ7VPTS91I=",
   "success": true,
-  "projectFilePath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\B&B code\\backend0\\BookingProject\\BookingProject.csproj",
+  "projectFilePath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingProject\\BookingProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tony_\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\tony_\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.8\\microsoft.aspnetcore.openapi.10.0.8.nupkg.sha512",

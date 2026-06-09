@@ -3,34 +3,50 @@
 namespace BookingProject.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/Admin/[controller]")]
 public class BookingController(ILogger<BookingController> logger):ControllerBase
-{f
-    [HttpGet("/")]
+{
+    
+    [HttpGet()]
     public IActionResult Get()
     {
         logger.LogInformation("Controller Action: Fetching All registerd Bookings  ....");
         return Ok();
     }
-    
+
     [HttpGet("{id}")]
-    public Task<ActionResult<BookingDto>> GetBookingById(int id);
+    public Task<ActionResult> GetBookingById(int id)
+    {
+        throw new NotImplementedException("Not Implemented yet");
+    }
     
     [HttpPost]
-    public Task<ActionResult<BookingDto>> CreateBooking(CreateBookingDto dto);
+    public Task<ActionResult> CreateBooking()
+    {
+        throw new NotImplementedException("Not Implemented yet");
+    }
     
     [HttpPut("{id}")]
-    public Task<IActionResult> UpdateBooking(int id, UpdateBookingDto dto);
+    public Task<IActionResult> UpdateBooking()
+    {
+        throw new NotImplementedException("Not Implemented yet");
+    }
 
     [HttpDelete("{id}")]
-    public Task<IActionResult> DeleteBooking(int id);
+    public Task<IActionResult> DeleteBooking(int id)
+    {
+        throw new NotImplementedException("Not Implemented yet");
+    }
 
     [HttpGet("availability")]
     public Task<ActionResult<bool>> CheckRoomAvailability(
         int roomId,
         DateOnly checkInDate,
         DateOnly checkOutDate
-    );
+    )
+    {
+        throw new NotImplementedException("Not Implemented yet");
+    }
     
     
     

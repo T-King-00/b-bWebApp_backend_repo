@@ -2130,11 +2130,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\BedAndBreakfast\\BookingSystem\\backend\\BookingTestProject\\BookingTestProject.csproj",
+      "projectUniqueName": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingTestProject\\BookingTestProject.csproj",
       "projectName": "BookingTestProject",
-      "projectPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\BedAndBreakfast\\BookingSystem\\backend\\BookingTestProject\\BookingTestProject.csproj",
+      "projectPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingTestProject\\BookingTestProject.csproj",
       "packagesPath": "C:\\Users\\tony_\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\BedAndBreakfast\\BookingSystem\\backend\\BookingTestProject\\obj\\",
+      "outputPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingTestProject\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2155,8 +2155,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\BedAndBreakfast\\BookingSystem\\backend\\BookingProject\\BookingProject.csproj": {
-              "projectPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\BedAndBreakfast\\BookingSystem\\backend\\BookingProject\\BookingProject.csproj"
+            "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingProject\\BookingProject.csproj": {
+              "projectPath": "C:\\Users\\tony_\\OneDrive - BTH Student\\lexicon .NET\\project\\b&bWebApp\\backend\\BookingProject\\BookingProject.csproj"
             }
           }
         }
