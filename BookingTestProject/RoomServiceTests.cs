@@ -1,6 +1,7 @@
 ﻿using BookingProject;
 using BookingProject.Services;
 using BookingProject.Database;
+using BookingProject.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

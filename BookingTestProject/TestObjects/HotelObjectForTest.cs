@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using BookingProject;
+using BookingProject.Models;
 
 namespace BookingProject;
 
@@ -18,14 +19,14 @@ public class HotelObjectForTest:IEnumerable<object[]>
         List<Bed> beds = new List<Bed>();
         beds.Add(bed);
         Price price = new Price(500);
-        room1=new Room(11,RoomType.SingleRoom,beds,price);
+        room1=new Room(RoomType.SingleRoom,11,beds, price);
         room1.Id = 1;
 
         Room room2;
         Bed bed2=new Bed(BedType.Double,1);
         List<Bed> beds2 = new List<Bed>();
         beds.Add(bed2);
-        room2=new (14,RoomType.DoubleRoom,beds2,price);
+        room2=new (RoomType.DoubleRoom,14,beds2, price);
         room2.Id = 2;
         
         

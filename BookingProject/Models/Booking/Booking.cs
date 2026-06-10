@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using  BookingProject.Models;
 namespace BookingProject.Booking;
 
 public class Booking

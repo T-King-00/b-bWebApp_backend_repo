@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+namespace BookingProject.Models;
 
-namespace BookingProject;
 
 public  class Room
 {
@@ -10,7 +10,7 @@ public  class Room
     public int Id{get;set;}
     
     public int size{get;set;}
-    public RoomType RoomType{get;set;}
+    public RoomType Type{get;set;}
     public List<Bed> Beds { get; set; } = new ();
     
     
@@ -24,19 +24,21 @@ public  class Room
     [JsonIgnore]
     public Booking.Booking? Booking{get;set;}
 
-    
-
-    
-    
-    
     public Room()
     {
-        
     }
-    public Room(int size, RoomType roomType, List<Bed> beds ,Price basePricePerDay)
+
+    public Room(int hotelId, int roomId, RoomType roomType, int size)
+    {
+        this.HotelId = hotelId;
+        this.Id = roomId;
+        this.Type = roomType;
+        this.size = size;
+    }
+    public Room(RoomType roomType ,int size, List<Bed> beds ,Price basePricePerDay)
     {
         this.size = size;
-        this.RoomType = roomType;
+        this.Type = roomType;
         this.Beds = beds;
         this.Price = basePricePerDay;
     }

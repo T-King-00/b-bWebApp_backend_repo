@@ -1,4 +1,5 @@
-﻿using BookingProject.Services;
+using BookingProject.Models;
+using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace BookingProject.Controllers;
 

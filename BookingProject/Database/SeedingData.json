@@ -1,0 +1,86 @@
+﻿{
+    "hotels": [
+                {
+                "id": 1,
+                "name": "Danish Bed and Breakfast",
+                "city": "Skagen",
+                "country": "Denmark",
+                "description": "Danish hotel owned by Pernilles Bed and Breakfast",
+                "creationDate": "2026-06-08"
+                }
+    ],
+    "rooms": [
+                {
+                "id": 1,
+                "hotelId": 1,
+                "Type": "SingleRoom",
+                "size": 11
+                },
+                {
+                "id": 2,
+                "hotelId": 1,
+                "Type": "DoubleRoom",
+                "size": 14
+                },
+                {
+                "id": 3,
+                "hotelId": 1,
+                "Type": "DoubleRoom",
+                "size": 16
+                },
+                {
+                "id": 4,
+                "hotelId": 1,
+                "Type": "FamilyRoom",
+                "size": 24
+                } 
+  ],
+    "beds": [
+              {
+              "id": 1,
+              "roomId": 1,
+              "type": "Single",
+              "quantity": 1
+              },
+              {
+              "id": 2,
+              "roomId": 2,
+              "type": "Single",
+              "quantity": 2
+              },
+              {
+              "id": 3,
+              "roomId": 3,
+              "type": "Double",
+              "quantity": 1
+              },
+              {
+              "id": 4,
+              "roomId": 4,
+              "type": "Single",
+              "quantity": 3
+              }
+              ],
+              "prices": [
+              {
+              "id": 1,
+              "roomId": 1,
+              "basePrice": 550
+              },
+              {
+              "id": 2,
+              "roomId": 2,
+              "basePrice": 700
+              },
+              {
+              "id": 3,
+              "roomId": 3,
+              "basePrice": 765
+              },
+              {
+              "id": 4,
+              "roomId": 4,
+              "basePrice": 850
+              }
+    ]
+}

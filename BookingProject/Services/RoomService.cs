@@ -1,4 +1,5 @@
-﻿using BookingProject.Database;
+using BookingProject.Database;
+using BookingProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +56,7 @@ public class RoomService( AppDbContext _context)
     public void Update(Room room,int hotelId)
     {
         var existingRoom = GetRoomlByIdInHotel( room.Id, hotelId);
-        existingRoom.RoomType = room.RoomType;
+        existingRoom.Type = room.Type;
         existingRoom.Beds = room.Beds;
         existingRoom.Price = room.Price;
         existingRoom.size  =   room.size;

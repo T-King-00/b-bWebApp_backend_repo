@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using BookingProject.Booking;
-namespace BookingProject;
+namespace BookingProject.Models;
 
 /// <summary>
 /// Represents a customer who can make one or more bookings.

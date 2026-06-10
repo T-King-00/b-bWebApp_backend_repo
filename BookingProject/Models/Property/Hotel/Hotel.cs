@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
+using  BookingProject.Models;
 namespace BookingProject;
 
 public  class Hotel 
@@ -16,6 +16,10 @@ public  class Hotel
     
     //Data members
     public ICollection<Room> Rooms{get;set;}
+
+    public Hotel()
+    {
+    }
     
     public Hotel(string name, DateTime creationDate, string city, string country)
     {
