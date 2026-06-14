@@ -12,7 +12,6 @@ public class RoomService( AppDbContext _context)
         var rooms = _context.Rooms.Where(room => room.HotelId == hotelId)
             .Include(room => room.Beds)
             .Include(room => room.Price)
-            
             .ToList();
      
         return rooms;

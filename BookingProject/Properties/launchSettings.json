@@ -1,11 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
+  "hotReloadEnabled" : true,
   "profiles": {
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5014",
+      "hotReloadEnabled" : true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
