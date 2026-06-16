@@ -2,6 +2,8 @@ using BookingProject.Models;
 using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using System.Runtime.InteropServices.JavaScript;
+
 namespace BookingProject.Controllers;
 
 [ApiController]
@@ -17,20 +19,17 @@ public class RoomController(ILogger<RoomController> logger, RoomService roomServ
     public ActionResult<List<Room>> GetAvailableRooms([FromQuery] string checkInDate, [FromQuery] string checkOutDate)
     {
         //var rooms=roomService.GetAllRooms();
+        HelperFunctions help=new HelperFunctions(logger);
         try
         {
             
             logger.LogInformation("Controller Action: Fetching available rooms in hotelBranch  ....");
             logger.LogInformation($"Controller Action: within dates {checkInDate} + {checkOutDate} ....");
-
-           
-
-            if (!DateOnly.TryParseExact(checkInDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly parsedCheckInDate) ||
-                !DateOnly.TryParseExact(checkOutDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly parsedCheckOutDate))
+            (DateOnly parsedCheckInDate,DateOnly parsedCheckOutDate)  = help.ParseCheckInOutDates(checkInDate, checkOutDate)!;
+            if ( parsedCheckInDate ==default|| parsedCheckOutDate==default )
             {
-                logger.LogWarning("Controller Action: Invalid dates format. " +
-                                  " Dates must use format yyyy-MM-dd, for example: /rooms?checkInDate=2026-06-20&checkOutDate=2026-06-22");
-                return BadRequest("Dates must use format yyyy-MM-dd, for example: /rooms?checkInDate=2026-06-20&checkOutDate=2026-06-22");
+                logger.LogError("Controller Action: Invalid dates");
+                return BadRequest("Invalid dates");
             }
 
             if (parsedCheckOutDate <= parsedCheckInDate)

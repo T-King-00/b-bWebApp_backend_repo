@@ -22,4 +22,9 @@
       <ProjectReference Include="..\BookingProject\BookingProject.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="ApiTests\" />
+      <Folder Include="UnitTests\" />
+    </ItemGroup>
+
 </Project>

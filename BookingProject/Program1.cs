@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using BookingProject;
 using BookingProject.Database;
+using BookingProject.Exceptions.ExceptionHandler;
 using BookingProject.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -13,6 +14,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
+builder.Services.AddProblemDetails();
+builder.Services.AddCors();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -22,6 +27,7 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<HotelService>();
 
 builder.Services.AddLogging();
@@ -46,17 +52,6 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connect
     
 var app = builder.Build();
 
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.MapControllers();
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger v1"));
-
-}
-
 await using ( var scope = app.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -64,4 +59,35 @@ await using ( var scope = app.Services.CreateAsyncScope())
 };
 
 
+//custom middleware
+app.Use(async (context, next) =>
+    {
+        Console.WriteLine("Middleware running");
+        await next();
+    }
+);
+app.UseExceptionHandler();
+
+
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+if (app.Environment.IsDevelopment())
+{
+    //app.UseDeveloperExceptionPage();
+    
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger v1"));
+
+}
+
+/*if (app.Environment.IsProduction())
+{
+    app.UseExceptionHandler("/Error");
+    
+}*/
+
+
+
+app.MapControllers();
 app.Run();

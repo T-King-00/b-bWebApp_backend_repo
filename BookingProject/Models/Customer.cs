@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using BookingProject.Booking;
+using BookingProject;
 namespace BookingProject.Models;
 
 /// <summary>
@@ -30,5 +30,5 @@ public class Customer
     [MaxLength(12)]
     public string? PersonalNumber { get; set; }
 
-    public ICollection<Booking.Booking> Bookings { get; set; } = [];
+    public ICollection<Booking> Bookings { get; set; } = [];
 }

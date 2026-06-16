@@ -23,7 +23,7 @@ public class RoomService( AppDbContext _context)
             .Where(room => room.HotelId == hotelId)
             .Where(room=>!_context.Bookings
                 .Any(b=>b.RoomId==room.Id 
-                        && b.Status==Booking.Booking.BookingStatus.Confirmed
+                        && b.Status==Booking.BookingStatus.Confirmed
                         && checkIn < b.CheckOutDate 
                         && checkOut > b.CheckInDate ))
             .Include(room => room.Beds)
