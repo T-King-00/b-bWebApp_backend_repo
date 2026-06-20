@@ -7,7 +7,7 @@ namespace BookingProject;
 public class Booking
 {
     [Key]
-    public int Id {get;set;}
+    public int Id {get;set;}=5;
     
     public DateOnly CheckInDate { get; set; }
     public DateOnly CheckOutDate { get; set; }

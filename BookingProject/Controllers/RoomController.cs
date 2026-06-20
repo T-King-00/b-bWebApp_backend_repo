@@ -16,7 +16,7 @@ public class RoomController(ILogger<RoomController> logger, RoomService roomServ
      
      */
     [HttpGet("/rooms")]
-    public ActionResult<List<Room>> GetAvailableRooms([FromQuery] string checkInDate, [FromQuery] string checkOutDate)
+    public ActionResult<List<Room>> GetAvailableRooms([FromQuery] string checkInDate, [FromQuery] string checkOutDate,[FromQuery] int numberOfGuests)
     {
         //var rooms=roomService.GetAllRooms();
         HelperFunctions help=new HelperFunctions(logger);
@@ -38,7 +38,7 @@ public class RoomController(ILogger<RoomController> logger, RoomService roomServ
                 return BadRequest("checkOutDate must be after checkInDate.");
             }
 
-          List<Room> rooms=roomService.GetAvailableRooms(1, parsedCheckInDate, parsedCheckOutDate) 
+          List<Room> rooms=roomService.GetAvailableRooms(1, parsedCheckInDate, parsedCheckOutDate, numberOfGuests) 
                              ?? throw new Exception("No rooms found in this hotel branch !");
             return Ok(rooms);
         }

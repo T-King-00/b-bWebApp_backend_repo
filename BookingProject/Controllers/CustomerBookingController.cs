@@ -1,7 +1,8 @@
 ﻿using BookingProject.Database;
-using BookingProject.Exceptions;
+using BookingProject.Exceptions.DomainExceptions;
 using BookingProject.Models;
 using BookingProject.Models.DTO;
+using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,7 @@ namespace BookingProject.Controllers;
 
 [ApiController]
 [Route("/rooms/{roomId:int}/bookingForm")]
-public class CustomerBookingController(AppDbContext _DbContext,ILogger<CustomerBookingController> logger):ControllerBase
+public class CustomerBookingController(AppDbContext _DbContext,BookingService service,ILogger<CustomerBookingController> logger):ControllerBase
 {
     [HttpPost]
     public ActionResult AddNewBooking( int roomId,[FromBody] BookingRequestDTO bookingReq)
@@ -23,12 +24,12 @@ public class CustomerBookingController(AppDbContext _DbContext,ILogger<CustomerB
         {
             if (parsedCheckInDate == default || parsedCheckOutDate == default)
             {
-                throw new InvalidBookingDateTypeException();
+                throw new CustomExceptions.InvalidBookingDateTypeException();
             }
 
             Booking newBooking = new Booking
             {
-                Id = 2,
+                Id = 1,
                 CustomerId = 1,
                 Customer = new Customer
                 {
@@ -42,9 +43,8 @@ public class CustomerBookingController(AppDbContext _DbContext,ILogger<CustomerB
                 CheckOutDate = parsedCheckOutDate,
                 NumberOfGuests = bookingReq.NumberOfGuests,
             };
+            service.Add(newBooking);
 
-            _DbContext.Bookings.Add(newBooking);
-            _DbContext.SaveChanges();
         }
         catch (DbUpdateException e)
         {

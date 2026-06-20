@@ -1,4 +1,4 @@
-﻿using BookingProject.Exceptions;
+﻿using BookingProject.Exceptions.DomainExceptions;
 using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,28 +7,37 @@ namespace BookingProject.Controllers;
 [ApiController]
 [Route("/[controller]")]
 public class BookingController(ILogger<BookingController> logger, BookingService bookingService) : ControllerBase
-{
-
-    [HttpGet("/{bookingId:int}")]
-
-public IActionResult Get(int bookingId)
+{ 
+    [HttpGet("{bookingId:int}")]
+    public IActionResult Get(int bookingId)
     {
-        logger.LogInformation("Controller Action: Fetching All registerd Bookings  ....");
+        logger.LogInformation("Controller Action: Fetching  registered Booking  ....");
         if (bookingId<0)
         {
-            throw new BookingNotFoundInDbException();
+           return BadRequest("Invalid booking id");
         }
-        Booking bookingFetched=bookingService.Get(bookingId)?? throw new BookingNotFoundInDbException();
+        Booking bookingFetched=bookingService.Get(bookingId)?? throw new CustomExceptions.BookingNotFoundInDbException();
         logger.LogInformation($"Controller Action: Fetching  registered booking with id: {bookingId}  completed.");
         
         return Ok(bookingFetched);
     }
-
-    [HttpGet("{id}")]
-    public Task<ActionResult> GetBookingById(int id)
+    
+    
+    [HttpGet()]
+    public IActionResult GetAll()
     {
-        throw new NotImplementedException("Not Implemented yet");
+        logger.LogInformation("Controller Action: Fetching All registered Bookings  ....");
+        List<Booking> bookingsFetched=bookingService.Get();
+        if (bookingsFetched.Count == 0)
+        {
+            return NotFound("No bookings found");
+        }
+        
+        logger.LogInformation($"Controller Action: Fetching all registered bookings completed.");
+        
+        return Ok(bookingsFetched);
     }
+
     
     [HttpPost]
     public Task<ActionResult> CreateBooking()

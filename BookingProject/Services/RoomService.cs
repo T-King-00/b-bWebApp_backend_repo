@@ -16,17 +16,27 @@ public class RoomService( AppDbContext _context)
      
         return rooms;
     }
-    public List<Room> GetAvailableRooms(int hotelId,DateOnly checkIn,DateOnly checkOut)
+    public List<Room> GetAvailableRooms(int hotelId,DateOnly checkIn,DateOnly checkOut,int? numberOfGuests = null)
     {
-        
-        var rooms = _context.Rooms
+
+
+        var query = _context.Rooms
             .Where(room => room.HotelId == hotelId)
-            .Where(room=>!_context.Bookings
-                .Any(b=>b.RoomId==room.Id 
-                        && b.Status==Booking.BookingStatus.Confirmed
-                        && checkIn < b.CheckOutDate 
-                        && checkOut > b.CheckInDate ))
-            .Include(room => room.Beds)
+            .Where(room => !_context.Bookings
+                .Any(b => b.RoomId == room.Id
+                          && b.Status == Booking.BookingStatus.Confirmed
+                          && checkIn < b.CheckOutDate
+                          && checkOut > b.CheckInDate));
+          
+        if (numberOfGuests is not null && numberOfGuests > 0)
+        {
+            query = query
+                .Where(room => room.Beds.Any(bed => bed.Quantity >= numberOfGuests));
+        }
+        
+        
+        var rooms=query.
+            Include(room => room.Beds)
             .Include(room => room.Price)
             .ToList();
      

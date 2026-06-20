@@ -1,16 +1,7 @@
-﻿using System ;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿namespace BookingProject.Exceptions.DomainExceptions;
 
-// These exceptions describe business errors.
-namespace BookingProject.Exceptions
-    {
-    public sealed class RoomNotFoundException: Exception
-    {
-        public RoomNotFoundException(int id):base($"Room with id {id} not found !")
-        { }
-    }
-
+public class CustomExceptions
+{
     public sealed class BookingIdDuplicateException:Exception
     {
         public BookingIdDuplicateException(int id):base($"There is another booking with this id {id} !")
@@ -19,10 +10,25 @@ namespace BookingProject.Exceptions
     public sealed class InvalidBookingDateException : Exception
     {
         public InvalidBookingDateException()
-            : base("Check-out date must be after check-in date !")
+            : base("Booking Dates are invalid ! ")
         {
         }
     }
+    public sealed class InvalidBookingException : Exception
+    {
+        public InvalidBookingException()
+            : base("Booking data is invalid !")
+        {
+        }
+    }
+    public sealed class OverLappingBookingException : Exception
+    {
+        public OverLappingBookingException()
+            : base("The same room is  already booked during the requested dates !")
+        {
+        }
+    }
+    
     public sealed class InvalidBookingDateTypeException : Exception
     {
         public InvalidBookingDateTypeException()
@@ -45,6 +51,5 @@ namespace BookingProject.Exceptions
         {
         }
     }
-    
 
-    }
+}

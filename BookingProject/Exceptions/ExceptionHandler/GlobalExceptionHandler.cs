@@ -12,8 +12,8 @@ public class GlobalExceptionHandler:IExceptionHandler
         _logger.LogError(exception, "Unhandled Exception occured: ");
         var problemDetails = new ProblemDetails
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Server error",
+            Status = StatusCodes.Status400BadRequest,
+            Title = "Bad Request",
             Detail = "Something went wrong. Please try again later."
         };
         httpContext.Response.StatusCode = problemDetails.Status.Value;

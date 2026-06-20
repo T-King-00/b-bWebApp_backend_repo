@@ -3,6 +3,7 @@ using BookingProject;
 using BookingProject.Database;
 using BookingProject.Exceptions.ExceptionHandler;
 using BookingProject.Services;
+using BookingProject.Validators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -25,10 +26,17 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         
     });
-
+// services DI
 builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<HotelService>();
+
+// validation rules DI
+builder.Services.AddScoped<IBookingRule, BookingMustNotOverlapRule>();
+builder.Services.AddScoped<IBookingRule, DateValidationRule>();
+builder.Services.AddScoped<IBookingRule, BookingNoDuplicateIdRule>();
+builder.Services.AddScoped<CompositeValidator>();
+
 
 builder.Services.AddLogging();
 
