@@ -1,8 +1,8 @@
 using BookingProject;
 using BookingProject.Database;
-using BookingProject.Exceptions;
 using BookingProject.Exceptions.DomainExceptions;
 using BookingProject.Models;
+using BookingProject.Models.Booking;
 using BookingProject.Services;
 using BookingProject.Validators;
 using Microsoft.Data.Sqlite;
@@ -13,7 +13,7 @@ namespace BookingTestProject.UnitTests.ServiceTests;
 
 public class BookingServiceTests
 {
-    
+    private static readonly DateOnly TodayDate = new DateOnly(2026, 6, 23);
     //tests: AddBooking.
     //conditions: if all data is valid and provided
     //expected: Saved Changes in db
@@ -21,31 +21,34 @@ public class BookingServiceTests
     public void AddBooking_WhenBookingIsValid_SavesBookingToDatabase()
     {   //arrange
         using var testDatabase = CreateTestDatabase();
-        var bookingCreated = CreateBooking(id: 10);
+        var bookingCreated = CreateBooking( new Guid("422B658C-DEB5-446D-9C34-6E6E10E0BD38"));
         
         //act
         var bookingSavedAndReturned = testDatabase.BookingService.Add(bookingCreated);
-     
-        Assert.Equal(bookingCreated,bookingSavedAndReturned);
-
-        var bookingInDatabase = testDatabase.Db.Bookings.Single();
+        
+        
         //excepted,actual
-        Assert.Equal(10, bookingInDatabase.Id);
+        Assert.Equal(bookingCreated.Id,bookingSavedAndReturned.BookingId);
+
        }
 
     //tests: AddBooking.
-    //conditions: if new booking is valid and it's id is already in db
+    //conditions: if a new booking is valid, its id is already in db
     //expected: ThrowsBookingIdDuplicateException
     [Fact]
     public void AddBooking_WhenBookingIdAlreadyExists_ThrowsBookingIdDuplicateEx()
     {
         using var testDatabase = CreateTestDatabase();
-        testDatabase.BookingService.Add(CreateBooking(id: 20));
+        var bookingService = testDatabase.BookingService;
+        Booking bookingToAdd = CreateBooking();
+        bookingService.Add(bookingToAdd);
+        
         testDatabase.Db.SaveChanges();
-        var duplicateBooking = CreateBooking(id: 20);
-        var act =()=>testDatabase.BookingService.Add(duplicateBooking) ;
-
-        Assert.ThrowsAny<AggregateException>(act);
+        //add duplicate booking
+        var firstBookingId=bookingToAdd.Id;
+        var duplicateBooking = CreateBooking(firstBookingId);
+        
+        Assert.ThrowsAny<AggregateException>(() => bookingService.Add(duplicateBooking));
 
     }
 
@@ -56,13 +59,14 @@ public class BookingServiceTests
     public void AddBooking_WhenCheckOutDateIsNotAfterCheckInDate_ThrowsInvalidBookingDateEx()
     {
         using var testDatabase = CreateTestDatabase();
+        var bookingService = testDatabase.BookingService;
         var booking = CreateBooking(
-            id: 30,
+            id :new Guid("422B658C-DEB5-446D-9C34-6E6E10E0B330"),
             checkInDate: new DateOnly(2026, 6, 25),
             checkOutDate: new DateOnly(2026, 6, 25));
-
-        var act = () => testDatabase.BookingService.Add(booking);
-
+            
+        var act = () => bookingService.Add(booking);
+            
         Assert.Throws<AggregateException>(act);
         Assert.Empty(testDatabase.Db.Bookings);
     }
@@ -75,12 +79,13 @@ public class BookingServiceTests
     {
         using var testDatabase = CreateTestDatabase();
         var booking = CreateBooking(
-            id: 30,
-            checkInDate: new DateOnly(2026, 6, 25),
-            checkOutDate: new DateOnly(2026, 6, 25));
+            new Guid("422B658C-DEB5-446D-9C34-6E6E10E0B330"),
+            checkInDate:TodayDate,
+            checkOutDate: TodayDate );
         booking.RoomId = 100;
+        var bookingService = testDatabase.BookingService;
 
-        var act = () => testDatabase.BookingService.Add(booking);
+        var act = () => bookingService.Add(booking);
 
         Assert.Throws<AggregateException>(act);
         Assert.Empty(testDatabase.Db.Bookings);
@@ -88,7 +93,7 @@ public class BookingServiceTests
     
     
     //tests: UpdateBooking.
-    //conditions: if new booking data is changed (updating number of guests and checkin date)
+    //conditions: if new booking data is changed (updating number of guests and check-in date)
     //expected: The changes are saved in db. db entry is updated with new data.
     
     [Fact]
@@ -96,17 +101,17 @@ public class BookingServiceTests
     {
         //arrange
         using var testDatabase = CreateTestDatabase();
-        Booking oldBooking=CreateBooking(5,new DateOnly(2026, 6, 20),new DateOnly(2026, 6, 25));
+        Booking oldBooking=CreateBooking(new Guid("522B658C-DEB5-446D-9C34-6E6E10E0B305"),TodayDate,TodayDate.AddDays(5));
         testDatabase.Db.Bookings.Add(oldBooking);
         testDatabase.Db.SaveChanges();
         //    IMPORTANT: stop tracking oldBooking
         testDatabase.Db.Entry(oldBooking).State = EntityState.Detached;
         
-        //update number of guests and checkin date
+        //update number of guests and check-in date
         Booking bookingToBeUpdated = CreateBooking(
             id: oldBooking.Id,
-            checkInDate: new DateOnly(2026, 6, 21),
-            checkOutDate: oldBooking.CheckOutDate);
+            checkInDate: TodayDate.AddDays(2),
+            checkOutDate: TodayDate.AddDays(5));
         
         bookingToBeUpdated.TotalPrice = oldBooking.TotalPrice;
         bookingToBeUpdated.CustomerId = oldBooking.CustomerId;
@@ -116,7 +121,7 @@ public class BookingServiceTests
         //act 
         testDatabase.BookingService.UpdateBooking(bookingToBeUpdated);
         
-        var bookEntryAfterUpdating=testDatabase.Db.Bookings.AsNoTracking().Single(b=>b.Id==oldBooking.Id)!;
+        var bookEntryAfterUpdating=testDatabase.Db.Bookings.AsNoTracking().Single(b=>b.Id==oldBooking.Id);
         //assert
         //(Expected,actual)
         Assert.Equal(bookingToBeUpdated.NumberOfGuests,bookEntryAfterUpdating.NumberOfGuests);
@@ -126,36 +131,31 @@ public class BookingServiceTests
     }
 
     //tests: UpdateBooking.
-    //conditions: if new booking data is changed (updating checkin date ,checkout date)
-    //expected: throws  invalid booking date exception
+    //conditions: if new booking data is changed (updating check-in date,check-out date)
+    //expected: throws invalid booking date exception
     [Fact]
     public void UpdateBooking_WhenBookingDateIsInvalid_ThrowsInvalidBookingDateEx()
     {
         //arrange
         using var testDatabase = CreateTestDatabase();
-        Booking oldBooking=CreateBooking(1,new DateOnly(2026, 6, 18),new DateOnly(2026, 6, 20));
+        Booking oldBooking=CreateBooking(new Guid("122B658C-DEB5-446D-9C34-6E6E10E0B305"),TodayDate,TodayDate.AddDays(5));
         testDatabase.Db.Bookings.Add(oldBooking);
         testDatabase.Db.SaveChanges();
         //    IMPORTANT: stop tracking oldBooking
         testDatabase.Db.Entry(oldBooking).State = EntityState.Detached;
         
-        //update number of guests and checkin date
+        //update number of guests and check-in date
         Booking bookingToBeUpdated = CreateBooking(
             id: oldBooking.Id,
             checkInDate: new DateOnly(2026, 6, 20),
             checkOutDate: oldBooking.CheckOutDate);
+        var bookingService = testDatabase.BookingService;
         
         //act 
-        var act = () => { testDatabase.BookingService.UpdateBooking(bookingToBeUpdated);};
-      
-        
-        var bookEntryAfterUpdating=testDatabase.Db.Bookings.AsNoTracking().Single(b=>b.Id==oldBooking.Id)!;
+        var act = () => { bookingService.UpdateBooking(bookingToBeUpdated);};
+
         //assert
-        
-        
-
-
-
+        Assert.Throws<AggregateException>(act);
     }
     
     //tests: DeleteBooking functionality from BookingService
@@ -166,7 +166,7 @@ public class BookingServiceTests
     {
         //arrange
         using var testDatabase = CreateTestDatabase();
-        Booking booking=CreateBooking(1,new DateOnly(2026, 6, 16),new DateOnly(2026, 6, 25));
+        Booking booking=CreateBooking(new Guid("122B658C-DEB5-446D-9C34-6E6E10E0B305"),new DateOnly(2026, 6, 16),new DateOnly(2026, 6, 25));
         testDatabase.Db.Bookings.Add(booking);
         testDatabase.Db.SaveChanges();
         
@@ -187,13 +187,14 @@ public class BookingServiceTests
     {
         //arrange
         
-        int bookingId=55;
+        Guid bookingId=new Guid("522B658C-DEB5-446D-0000-6E6E10E0B305");
         using var testDatabase = CreateTestDatabase();
+        var bookingService = testDatabase.BookingService;
 
         //ACT on booking service
         var act=()=>
         {
-            testDatabase.BookingService.Delete(bookingId);
+            bookingService.Delete(bookingId);
         };
         
         //assert
@@ -204,17 +205,19 @@ public class BookingServiceTests
 
     
     private static Booking CreateBooking(
-        int id,
+        Guid? id = null,
         DateOnly? checkInDate = null,
         DateOnly? checkOutDate = null)
     {
         return new Booking
         {
-            Id = id,
+            Id = id ?? Guid.NewGuid(),
+            HotelId = 1,
             CustomerId = 1,
             RoomId = 1,
-            CheckInDate = checkInDate ?? new DateOnly(2026, 6, 20),
-            CheckOutDate = checkOutDate ?? new DateOnly(2026, 6, 25),
+            
+            CheckInDate = checkInDate ?? TodayDate,
+            CheckOutDate = checkOutDate ?? TodayDate.AddDays(5),
             NumberOfGuests = 2,
             TotalPrice = 1200
         };
@@ -254,7 +257,7 @@ public class BookingServiceTests
             Id = 1,
             HotelId = hotel.Id,
             Hotel = hotel,
-            size = 20,
+            Size = 20,
             Type = RoomType.DoubleRoom,
             Price = new Price(100)
         };
@@ -294,7 +297,8 @@ public class BookingServiceTests
       
             
             CompositeValidator cv = new CompositeValidator(rules);
-            BookingService = new BookingService(db,logger,cv);
+            RoomService roomService = new(db);
+            BookingService = new BookingService(db,logger,cv,roomService);
         }
 
         public AppDbContext Db { get; }

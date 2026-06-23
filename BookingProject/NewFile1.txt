@@ -1,0 +1,4 @@
+﻿last commit
+
+added validation rule:CustomerShouldntHaveTwoBookingsAtSameDateRangeRule
+Update booking creation flow and customer relationship handling

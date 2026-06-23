@@ -1,5 +1,6 @@
 ﻿using BookingProject.Database;
 using BookingProject.Exceptions.DomainExceptions;
+using BookingProject.Models.Booking;
 
 namespace BookingProject.Validators;
 
@@ -24,7 +25,7 @@ public class BookingNoDuplicateIdRule(AppDbContext dbContext):IBookingRule
     public bool ValidateNotDuplicatedBooking(Booking booking, IQueryable<Booking> bookings)
     {
             
-        if (booking.Id != 0 && bookings.Any(existingBooking => existingBooking.Id == booking.Id))
+        if ( bookings.Any(existingBooking => existingBooking.Id == booking.Id))
         {
             return true;
         }

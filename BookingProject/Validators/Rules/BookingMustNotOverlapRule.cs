@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BookingProject.Database;
 using BookingProject.Exceptions.DomainExceptions;
+using BookingProject.Models.Booking;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookingProject.Validators;

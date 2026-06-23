@@ -9,7 +9,7 @@ public  class Room
     [Key]
     public int Id{get;set;}
     
-    public int size{get;set;}
+    public int Size{get;set;}
     public RoomType Type{get;set;}
     public List<Bed> Beds { get; set; } = new ();
     
@@ -22,7 +22,7 @@ public  class Room
     public Price Price{get;set;}
     
     [JsonIgnore]
-    public Booking? Booking{get;set;}
+    public Booking.Booking? Booking{get;set;}
 
     public Room()
     {
@@ -33,11 +33,11 @@ public  class Room
         this.HotelId = hotelId;
         this.Id = roomId;
         this.Type = roomType;
-        this.size = size;
+        this.Size = size;
     }
     public Room(RoomType roomType ,int size, List<Bed> beds ,Price basePricePerDay)
     {
-        this.size = size;
+        this.Size = size;
         this.Type = roomType;
         this.Beds = beds;
         this.Price = basePricePerDay;

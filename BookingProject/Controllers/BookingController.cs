@@ -1,4 +1,5 @@
 ﻿using BookingProject.Exceptions.DomainExceptions;
+using BookingProject.Models.Booking;
 using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +9,11 @@ namespace BookingProject.Controllers;
 [Route("/[controller]")]
 public class BookingController(ILogger<BookingController> logger, BookingService bookingService) : ControllerBase
 { 
-    [HttpGet("{bookingId:int}")]
-    public IActionResult Get(int bookingId)
+    [HttpGet("{bookingId:Guid}")]
+    public IActionResult Get(Guid bookingId)
     {
         logger.LogInformation("Controller Action: Fetching  registered Booking  ....");
-        if (bookingId<0)
-        {
-           return BadRequest("Invalid booking id");
-        }
+       
         Booking bookingFetched=bookingService.Get(bookingId)?? throw new CustomExceptions.BookingNotFoundInDbException();
         logger.LogInformation($"Controller Action: Fetching  registered booking with id: {bookingId}  completed.");
         
@@ -27,8 +25,8 @@ public class BookingController(ILogger<BookingController> logger, BookingService
     public IActionResult GetAll()
     {
         logger.LogInformation("Controller Action: Fetching All registered Bookings  ....");
-        List<Booking> bookingsFetched=bookingService.Get();
-        if (bookingsFetched.Count == 0)
+        List<Booking>? bookingsFetched=bookingService.Get();
+        if (bookingsFetched is null || bookingsFetched.Count==0)
         {
             return NotFound("No bookings found");
         }
@@ -45,14 +43,14 @@ public class BookingController(ILogger<BookingController> logger, BookingService
         throw new NotImplementedException("Not Implemented yet");
     }
     
-    [HttpPut("{id}")]
+    [HttpPut("{Guid}")]
     public Task<IActionResult> UpdateBooking()
     {
         throw new NotImplementedException("Not Implemented yet");
     }
 
-    [HttpDelete("{id}")]
-    public Task<IActionResult> DeleteBooking(int id)
+    [HttpDelete("{Guid}")]
+    public Task<IActionResult> DeleteBooking(Guid id)
     {
         throw new NotImplementedException("Not Implemented yet");
     }

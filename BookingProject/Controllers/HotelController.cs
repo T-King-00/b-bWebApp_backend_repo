@@ -6,23 +6,23 @@ namespace BookingProject.Controllers;
 
 [ApiController]
 [Route("/api/hotel")]
-public class HotelController(HotelService _hotelService, ILogger<HotelController> Logger):ControllerBase
+public class HotelController(HotelService hotelService, ILogger<HotelController> logger):ControllerBase
 {
     //return all hotel branches
     [HttpGet("/")]
     public IActionResult GetHotelDetails()
     {
-        Logger.LogInformation("Controller Action: Fetching  Hotel Details  ....");
+        logger.LogInformation("Controller Action: Fetching  Hotel Details  ....");
         
         //one branch exists with id equal one for now.
         try
         {
-            var hotel =_hotelService.GetHotelById(1)?? throw new Exception("No hotel found with this id !");
+            var hotel =hotelService.GetHotelById(1)?? throw new Exception("No hotel found with this id !");
             return Ok(hotel);
         }
         catch (Exception e)
         {
-            Logger.LogError("   Controller Error: No hotel found with 1 as id !....");
+            logger.LogError("   Controller Error: No hotel found with 1 as id !....");
             return StatusCode(500, e.Message);
         }
     }

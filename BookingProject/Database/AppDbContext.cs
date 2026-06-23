@@ -1,5 +1,6 @@
 using System.Text.Json;
 using BookingProject.Models;
+using BookingProject.Models.Booking;
 using Microsoft.EntityFrameworkCore;
 
 using Microsoft.Data.Sqlite;

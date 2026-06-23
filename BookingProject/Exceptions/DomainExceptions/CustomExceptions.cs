@@ -4,7 +4,7 @@ public class CustomExceptions
 {
     public sealed class BookingIdDuplicateException:Exception
     {
-        public BookingIdDuplicateException(int id):base($"There is another booking with this id {id} !")
+        public BookingIdDuplicateException(Guid id):base($"There is another booking with this id {id} !")
         { }
     }
     public sealed class InvalidBookingDateException : Exception

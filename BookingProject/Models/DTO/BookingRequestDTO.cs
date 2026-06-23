@@ -2,7 +2,7 @@
 
 namespace BookingProject.Models.DTO;
 
-public class BookingRequestDTO
+public class BookingRequestDto
 {
     [Required]
     public int RoomId { get; set; }
@@ -10,14 +10,15 @@ public class BookingRequestDTO
     public string CheckInDate { get; set; }
     [Required]
     public string CheckOutDate { get; set; } 
+    
     [Range(1,10)]
     public int NumberOfGuests { get; set; }
     [Required]
-    public CustomerDTO Customer{get;set;}
+    public CustomerDto Customer{get;set;}
     
 }
 
-public class CustomerDTO
+public class CustomerDto
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

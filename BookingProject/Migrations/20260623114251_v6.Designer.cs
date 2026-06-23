@@ -3,6 +3,7 @@ using System;
 using BookingProject.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260623114251_v6")]
+    partial class v6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
@@ -84,9 +87,6 @@ namespace BookingProject.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("HotelId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("ModificationDateTime")
                         .HasColumnType("TEXT");
 
@@ -99,14 +99,12 @@ namespace BookingProject.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("REAL");
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("HotelId");
 
                     b.HasIndex("RoomId")
                         .IsUnique();
@@ -177,10 +175,10 @@ namespace BookingProject.Migrations
                     b.Property<int>("HotelId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Size")
+                    b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("size")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -207,12 +205,6 @@ namespace BookingProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookingProject.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BookingProject.Models.Room", "Room")
                         .WithOne("Booking")
                         .HasForeignKey("BookingProject.Models.Booking.Booking", "RoomId")
@@ -220,8 +212,6 @@ namespace BookingProject.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Hotel");
 
                     b.Navigation("Room");
                 });

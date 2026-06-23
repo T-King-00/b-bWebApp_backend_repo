@@ -1,6 +1,5 @@
-﻿using BookingProject.Database;
-using BookingProject.Exceptions.DomainExceptions;
-using BookingProject.Models;
+﻿using BookingProject.Exceptions.DomainExceptions;
+using BookingProject.Models.Booking;
 using BookingProject.Models.DTO;
 using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,16 +9,16 @@ namespace BookingProject.Controllers;
 
 [ApiController]
 [Route("/rooms/{roomId:int}/bookingForm")]
-public class CustomerBookingController(AppDbContext _DbContext,BookingService service,ILogger<CustomerBookingController> logger):ControllerBase
+public class CustomerBookingController(BookingService service,ILogger<CustomerBookingController> logger):ControllerBase
 {
     [HttpPost]
-    public ActionResult AddNewBooking( int roomId,[FromBody] BookingRequestDTO bookingReq)
+    public IActionResult AddNewBooking( int roomId,[FromBody] BookingRequestDto bookingReq)
     {
         logger.LogInformation("Controller Action: New booking is being added .....");
         
         HelperFunctions help=new HelperFunctions(logger);
         (DateOnly parsedCheckInDate,DateOnly parsedCheckOutDate) = help.ParseCheckInOutDates(bookingReq.CheckInDate, bookingReq.CheckOutDate) !;
-
+        BookingResponseDto bookingResponseDto;
         try
         {
             if (parsedCheckInDate == default || parsedCheckOutDate == default)
@@ -29,22 +28,17 @@ public class CustomerBookingController(AppDbContext _DbContext,BookingService se
 
             Booking newBooking = new Booking
             {
-                Id = 1,
                 CustomerId = 1,
-                Customer = new Customer
-                {
-                    FirstName = bookingReq.Customer.FirstName,
-                    LastName = bookingReq.Customer.LastName,
-                    Email = bookingReq.Customer.Email,
-                    PhoneNumber = bookingReq.Customer.PhoneNumber
-                },
+                HotelId = 1,
                 RoomId = roomId,
                 CheckInDate = parsedCheckInDate,
                 CheckOutDate = parsedCheckOutDate,
                 NumberOfGuests = bookingReq.NumberOfGuests,
+                Status = Booking.BookingStatus.Confirmed,
             };
-            service.Add(newBooking);
 
+            //
+            bookingResponseDto = service.Add(newBooking);
         }
         catch (DbUpdateException e)
         {
@@ -53,20 +47,32 @@ public class CustomerBookingController(AppDbContext _DbContext,BookingService se
 
             return StatusCode(500, new
             {
-                message = "Could not create booking. Please try again later."
+                message = "Could not create booking. Please try again later.",
             });
         }
-
-        logger.LogInformation("Controller Action: New booking is added successfully");
-           
-        
-        return CreatedAtAction(nameof(AddNewBooking), new
+        catch (AggregateException e)
         {
-            message = "New booking is added successfully"
-        });
-       
+            logger.LogError("Controller Action: Error while adding new booking" +
+                            $" \n Exceptions:  {e.Message}");
+            return StatusCode(500, new
+            {
+                message = "Could not create booking. Please try again later.",
+            });
+        }
+        logger.LogInformation("Controller Action: New booking is added successfully");
+
+        return CreatedAtAction(nameof(AddNewBooking), new
+            {
+                bookingResponseDto,
+                message = "New booking is added successfully"
+            }
+        );
         
+
+
     }
+    
+    
     
     
 }

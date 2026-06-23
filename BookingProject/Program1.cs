@@ -31,10 +31,12 @@ builder.Services.AddScoped<RoomService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<HotelService>();
 
+
 // validation rules DI
 builder.Services.AddScoped<IBookingRule, BookingMustNotOverlapRule>();
 builder.Services.AddScoped<IBookingRule, DateValidationRule>();
 builder.Services.AddScoped<IBookingRule, BookingNoDuplicateIdRule>();
+builder.Services.AddScoped<IBookingRule, CustomerShouldntHaveTwoBookingsAtSameDateRangeRule>();
 builder.Services.AddScoped<CompositeValidator>();
 
 

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BookingProject.Controllers;
 using BookingProject.Exceptions.DomainExceptions;
+using BookingProject.Models.Booking;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ public class DateValidationRule: IBookingRule
 
         var todaysDate = new DateOnly(year, month, day);
 
-        if (checkInDate <= todaysDate || checkOutDate <= checkInDate)
+        if (checkInDate <todaysDate || checkOutDate <= checkInDate)
         {
             return false;
         }

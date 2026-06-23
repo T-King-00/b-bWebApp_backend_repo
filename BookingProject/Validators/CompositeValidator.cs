@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BookingProject.Models.Booking;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingProject.Validators;

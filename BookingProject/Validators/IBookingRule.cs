@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BookingProject.Exceptions.DomainExceptions;
+using BookingProject.Models.Booking;
 using BookingProject.Services;
 using Microsoft.AspNetCore.Components.Forms;
 
