@@ -2,11 +2,12 @@
 using BookingProject.Models.Booking;
 using BookingProject.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookingProject.Controllers;
 
 [ApiController]
-[Route("/[controller]")]
+[Route("/api/bookings/")]
 public class BookingController(ILogger<BookingController> logger, BookingService bookingService) : ControllerBase
 { 
     [HttpGet("{bookingId:Guid}")]
@@ -20,8 +21,7 @@ public class BookingController(ILogger<BookingController> logger, BookingService
         return Ok(bookingFetched);
     }
     
-    
-    [HttpGet()]
+    [HttpGet]
     public IActionResult GetAll()
     {
         logger.LogInformation("Controller Action: Fetching All registered Bookings  ....");
@@ -35,7 +35,6 @@ public class BookingController(ILogger<BookingController> logger, BookingService
         
         return Ok(bookingsFetched);
     }
-
     
     [HttpPost]
     public Task<ActionResult> CreateBooking()
@@ -49,11 +48,59 @@ public class BookingController(ILogger<BookingController> logger, BookingService
         throw new NotImplementedException("Not Implemented yet");
     }
 
-    [HttpDelete("{Guid}")]
-    public Task<IActionResult> DeleteBooking(Guid id)
+    [HttpDelete("{bookingReqId:guid}")]
+    public IActionResult DeleteBooking( [FromRoute] Guid bookingReqId)
     {
-        throw new NotImplementedException("Not Implemented yet");
+        logger.LogInformation("Controller Action:  booking is being deleted .....");
+ 
+        try
+        {
+            
+            int affectedRows=bookingService.Delete(bookingReqId);
+            if (affectedRows>1)
+            {
+                throw new Exception("More than a booking is deleted");
+            }
+            if (affectedRows==0)
+            {
+                throw new DbUpdateException();
+            }
+        }
+        catch (DbUpdateException e)
+        {
+            logger.LogError("Controller Action: Error while deleting a booking request" +
+                            $"   {e.Message}");
+            
+            return StatusCode(500, new
+            {
+                message = $"Could not delete booking. {e.Message}, Please try again later.",
+            });
+        }
+        catch (AggregateException e)
+        {
+    
+            logger.LogError("Controller Action: Error while deleting booking" +
+                            $" \n Exceptions:  {e.Message}");
+            
+            var message = e.InnerExceptions.FirstOrDefault()?.Message.Trim()
+                          ?? "Booking validation failed.";
+            return StatusCode(500, new
+            {
+                message = $"{message}"
+            });
+        }
+        logger.LogInformation("Controller Action: Booking is Deleted successfully");
+
+        return CreatedAtAction(nameof(DeleteBooking), new
+            {
+                message = "Booking is Deleted successfully"
+            }
+        );
+        
+
+
     }
+
 
     [HttpGet("availability")]
     public Task<ActionResult<bool>> CheckRoomAvailability(

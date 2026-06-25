@@ -32,28 +32,26 @@ public class BookingMustNotOverlapRule(AppDbContext dbContext): IBookingRule
     
     public bool ValidateOverLappingBookingWithAnotherCustomer(Booking booking, IQueryable<Booking> bookings)
     {
-        foreach (var bookingRecord in bookings)
+        bool isOverLapping = false;
+        foreach (var bookingRecordToCompareWith in bookings)
         {
-            if (booking.Id == bookingRecord.Id)
+            if (booking.Id == bookingRecordToCompareWith.Id)
             {
                 continue;
             }
-            if (booking.RoomId == bookingRecord.RoomId)
+            if (booking.RoomId == bookingRecordToCompareWith.RoomId)
             {
-                 if (booking.CheckInDate == bookingRecord.CheckInDate)
+                 if (booking.CheckInDate > bookingRecordToCompareWith.CheckOutDate && booking.CheckOutDate >= bookingRecordToCompareWith.CheckInDate)
                  {
-                     return true;
+                     isOverLapping=false;
                  }
-        
-                 if (booking.CheckOutDate <= bookingRecord.CheckOutDate)
+                 else
                  {
-                     return true;
+                     isOverLapping=true;
                  }
             }
-           
-            
         }
-        return false;
+        return isOverLapping;
     }
     
    

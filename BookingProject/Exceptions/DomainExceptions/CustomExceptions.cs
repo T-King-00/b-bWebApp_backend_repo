@@ -28,6 +28,13 @@ public class CustomExceptions
         {
         }
     }
+    public sealed class SameCustomerOverLappingBookingException : Exception
+    {
+        public SameCustomerOverLappingBookingException()
+            : base(" You have another booking on same date range !")
+        {
+        }
+    }
     
     public sealed class InvalidBookingDateTypeException : Exception
     {

@@ -22,7 +22,7 @@ public  class Room
     public Price Price{get;set;}
     
     [JsonIgnore]
-    public Booking.Booking? Booking{get;set;}
+    public ICollection<Booking.Booking>?  Booking{get;set;}
 
     public Room()
     {

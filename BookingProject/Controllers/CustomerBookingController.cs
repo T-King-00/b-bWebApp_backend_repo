@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 namespace BookingProject.Controllers;
 
 [ApiController]
-[Route("/rooms/{roomId:int}/bookingForm")]
+[Route("/api/rooms/{roomId:int}/bookings")]
+
 public class CustomerBookingController(BookingService service,ILogger<CustomerBookingController> logger):ControllerBase
 {
     [HttpPost]
@@ -44,19 +45,23 @@ public class CustomerBookingController(BookingService service,ILogger<CustomerBo
         {
             logger.LogError("Controller Action: Error while adding new booking" +
                             $"   {e.Message}");
-
+            
             return StatusCode(500, new
             {
-                message = "Could not create booking. Please try again later.",
+                message = $"Could not create booking. {e.Message}, Please try again later.",
             });
         }
         catch (AggregateException e)
         {
+    
             logger.LogError("Controller Action: Error while adding new booking" +
                             $" \n Exceptions:  {e.Message}");
+            
+            var message = e.InnerExceptions.FirstOrDefault()?.Message.Trim()
+                          ?? "Booking validation failed.";
             return StatusCode(500, new
             {
-                message = "Could not create booking. Please try again later.",
+                message = $"{message}"
             });
         }
         logger.LogInformation("Controller Action: New booking is added successfully");
@@ -72,6 +77,7 @@ public class CustomerBookingController(BookingService service,ILogger<CustomerBo
 
     }
     
+ 
     
     
     

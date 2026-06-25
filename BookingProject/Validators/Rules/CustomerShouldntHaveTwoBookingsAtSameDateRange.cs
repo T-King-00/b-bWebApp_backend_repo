@@ -25,7 +25,7 @@ public class CustomerShouldntHaveTwoBookingsAtSameDateRangeRule(AppDbContext dbC
             return (
                 new ValidationError(
                     Message:"Another Booking is Found At Same Date Range ",
-                    Exp: new CustomExceptions.InvalidBookingException()  )
+                    Exp: new CustomExceptions.SameCustomerOverLappingBookingException()  )
             );
         }
         return (null);
@@ -34,18 +34,13 @@ public class CustomerShouldntHaveTwoBookingsAtSameDateRangeRule(AppDbContext dbC
     public bool FindBookingWithSameDateRange(Booking bookingReq)
     {
         //fetch customer bookings
-        var bookings = dbContext.Bookings.Where(c => c.CustomerId == bookingReq.CustomerId).ToList();
-        if (bookings is null)
-        {
-            return false;
-        }
-        //check if customer has bookings at same date range
-        
+        //check if customer has old valid bookings at same date range
         //return true if customer has old booking overlapping with new booking
-        if (bookings.Any(b =>
+        if (dbContext.Bookings.Any(b =>
+                b.CustomerId == bookingReq.CustomerId &&
                 b.Id != bookingReq.Id &&
-                bookingReq.CheckOutDate< b.CheckInDate &&
-                bookingReq.CheckInDate > b.CheckOutDate 
+                ( bookingReq.CheckOutDate< b.CheckInDate &&
+                  bookingReq.CheckInDate > b.CheckOutDate )
                 ))
         {
             return true;
