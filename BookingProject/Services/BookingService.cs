@@ -1,6 +1,5 @@
 ﻿using BookingProject.Database;
 using BookingProject.Exceptions.DomainExceptions;
-using BookingProject.Exceptions.Exceptions;
 using BookingProject.Models;
 using BookingProject.Models.Booking;
 using BookingProject.Models.DTO;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingProject.Services;
 
-public class BookingService(AppDbContext context,ILogger<BookingService> logger,CompositeValidator bookingValidators,RoomService roomService)
+public class BookingService(AppDbContext context,ILogger<BookingService> logger,CompositeValidator bookingValidators,RoomService roomService,CustomerService customerService)
 {
  
    
@@ -30,30 +29,49 @@ public class BookingService(AppDbContext context,ILogger<BookingService> logger,
 
     }
 
-    public BookingResponseDto Add(Booking booking)
+    public BookingResponseDto? Add(Booking booking)
     {
         
+        logger.LogInformation(booking.Customer.FirstName + " " + booking.Customer.LastName);
+        
+        // check if customer is already in the database by using id
+        Customer? customer   =customerService.Get(booking.Customer.Id) ;
+        if (customer is null)
+        {
+            customer = new Customer
+            {
+                Id = Guid.Parse(booking.Customer.Id.ToString()),
+                FirstName = booking.Customer.FirstName,
+                LastName = booking.Customer.LastName,
+                PhoneNumber = booking.Customer.PhoneNumber,
+                PersonalNumber = booking.Customer.PersonalNumber,
+                Email = booking.Customer.Email
+            };
+
+            context.Customers.Add(booking.Customer);
+            booking.CustomerId = customer.Id;
+            booking.Customer = null;
+        }
+        booking.CustomerId = customer.Id;
+        booking.Customer = null;
         if (! Validate(booking,BookingValidationOperation.Add))
         {
             return null;
         }
-        
-       
         if (booking.CreationDateTime == default)
         {
             booking.CreationDateTime = DateTime.UtcNow;
         }
-
+        // initialize the total price  
         booking.TotalPrice = CalculateTotalPrice(booking);
         
         context.Bookings.Add(booking);
-        
-        
         context.SaveChanges() ;
+        
         booking.Room = roomService.GetRoomlByIdInHotelForUpdate(booking.RoomId, booking.HotelId);
         BookingResponseDto bookingResponseDto = new()
         {
-            BookingId = booking.Id,
+            Id = booking.Id,
             CheckInDate = booking.CheckInDate,
             CheckOutDate = booking.CheckOutDate,
             NumberOfGuests = booking.NumberOfGuests,
@@ -89,9 +107,9 @@ public class BookingService(AppDbContext context,ILogger<BookingService> logger,
         return context.Bookings.ToList();
         
     }
-    public List<Booking>? GetCustomerBookings(int customerId)
+    public List<Booking>? GetCustomerBookings(Guid customerId)
     {
-        List<Booking>? bookings= context.Bookings.AsNoTracking().Where(b=>b.CustomerId==customerId) .ToList();
+        List<Booking> bookings= context.Bookings.AsNoTracking().Where(b=>b.CustomerId==customerId) .ToList();
         if (bookings.Count==0 )
         {
             return null;
@@ -102,25 +120,25 @@ public class BookingService(AppDbContext context,ILogger<BookingService> logger,
     }
     
 
-    public int? UpdateBooking(Booking newBooking)
+    public int? UpdateBooking(Booking newBookingReq )
     {
-        ArgumentNullException.ThrowIfNull(newBooking);
-        
-        if (! Validate(newBooking,BookingValidationOperation.Update))
+        ArgumentNullException.ThrowIfNull(newBookingReq);
+        if (! Validate(newBookingReq,BookingValidationOperation.Update))
         {
             return null;
         }
         
         // Tracking is on, so EF will pick up changes on SaveChanges.
-        var bookingToUpdate = context.Bookings.FirstOrDefault(b=>b.Id==newBooking.Id)?? throw new CustomExceptions.BookingNotFoundInDbException();
+        var bookingToUpdate = context.Bookings.FirstOrDefault(b=>b.Id==newBookingReq.Id)?? throw new CustomExceptions.BookingNotFoundInDbException();
         
-        bookingToUpdate.CheckInDate = newBooking.CheckInDate;
-        bookingToUpdate.CheckOutDate = newBooking.CheckOutDate;
-        bookingToUpdate.NumberOfGuests = newBooking.NumberOfGuests;
+        bookingToUpdate.CheckInDate = newBookingReq.CheckInDate;
+        bookingToUpdate.CheckOutDate = newBookingReq.CheckOutDate;
+        bookingToUpdate.NumberOfGuests = newBookingReq.NumberOfGuests;
+        bookingToUpdate.RoomId = newBookingReq.RoomId;
         bookingToUpdate.ModificationDateTime = DateTime.UtcNow;
         
         //handle the price calculation is missing here.
-        bookingToUpdate.TotalPrice = newBooking.TotalPrice;
+        bookingToUpdate.TotalPrice = CalculateTotalPrice(newBookingReq);
         
         int affectedRows = context.SaveChanges();
         

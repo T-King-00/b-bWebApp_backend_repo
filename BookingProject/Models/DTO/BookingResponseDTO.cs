@@ -2,7 +2,7 @@
 
 public class BookingResponseDto
 {
-    public Guid BookingId { get; set; }
+    public Guid Id { get; set; }
     
     public RoomType RoomType { get; set; }
 

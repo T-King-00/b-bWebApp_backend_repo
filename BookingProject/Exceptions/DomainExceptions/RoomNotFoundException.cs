@@ -1,7 +1,7 @@
 ﻿
 
 // These exceptions describe business errors.
-namespace BookingProject.Exceptions.Exceptions
+namespace BookingProject.Exceptions.DomainExceptions
     {
     public sealed class RoomNotFoundException: Exception
     {

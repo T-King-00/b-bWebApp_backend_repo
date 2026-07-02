@@ -58,5 +58,14 @@ public class CustomExceptions
         {
         }
     }
+    
+    
+    public sealed class  InvalidCustomerData:Exception
+    {
+        public InvalidCustomerData()
+            : base("Customer data is invalid !")
+        {
+        }
+    }
 
 }

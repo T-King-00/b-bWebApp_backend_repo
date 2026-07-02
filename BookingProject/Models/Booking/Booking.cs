@@ -30,7 +30,7 @@ public class Booking
     public Hotel? Hotel { get; set; }
     
     [ForeignKey(nameof(CustomerId))]
-    public int CustomerId{get; set; } 
+    public Guid CustomerId{get; set; } 
     [JsonIgnore]
     public Customer? Customer{ get; set; } 
     

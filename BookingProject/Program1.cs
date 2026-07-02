@@ -27,7 +27,9 @@ builder.Services.AddControllers()
         
     });
 // services DI
+builder.Services.AddLogging();
 builder.Services.AddScoped<RoomService>();
+builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<HotelService>();
 
@@ -40,7 +42,7 @@ builder.Services.AddScoped<IBookingRule, CustomerShouldntHaveTwoBookingsAtSameDa
 builder.Services.AddScoped<CompositeValidator>();
 
 
-builder.Services.AddLogging();
+
 
 //db
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
@@ -70,12 +72,12 @@ await using ( var scope = app.Services.CreateAsyncScope())
 
 
 //custom middleware
-app.Use(async (context, next) =>
-    {
-        Console.WriteLine("Middleware running");
-        await next();
-    }
-);
+// app.Use(async (context, next) =>
+//     {
+//         Console.WriteLine("Middleware running");
+//         await next();
+//     }
+// );
 app.UseExceptionHandler();
 
 

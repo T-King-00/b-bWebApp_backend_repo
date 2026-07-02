@@ -13,10 +13,12 @@ namespace BookingTestProject.UnitTests.ServiceTests;
 
 public class BookingServiceTests
 {
-    private static readonly DateOnly TodayDate = new DateOnly(2026, 6, 23);
-    //tests: AddBooking.
-    //conditions: if all data is valid and provided
-    //expected: Saved Changes in db
+    //in order for the tests to run correctly, this TodayDate needs to be changed to todays actual date before running tests.
+    private static readonly DateOnly TodayDate = new DateOnly(2026, 7, 01);
+    
+    //Tests: AddBooking.
+    //Conditions: if all data is valid and provided
+    //Expected: Saved Changes in db
     [Fact]
     public void AddBooking_WhenBookingIsValid_SavesBookingToDatabase()
     {   //arrange
@@ -28,7 +30,7 @@ public class BookingServiceTests
         
         
         //excepted,actual
-        Assert.Equal(bookingCreated.Id,bookingSavedAndReturned.BookingId);
+        Assert.Equal(bookingCreated.Id,bookingSavedAndReturned.Id);
 
        }
 
@@ -213,7 +215,7 @@ public class BookingServiceTests
         {
             Id = id ?? Guid.NewGuid(),
             HotelId = 1,
-            CustomerId = 1,
+            CustomerId = Guid.Parse("CCA893AA-A9CF-4D90-AAAA-5D41354D044F"),
             RoomId = 1,
             
             CheckInDate = checkInDate ?? TodayDate,
@@ -266,7 +268,7 @@ public class BookingServiceTests
 
         var customer = new Customer
         {
-            Id = 1,
+            Id = Guid.Parse("CCA893AA-A9CF-4D90-AAAA-5D41354D044F"),
             FirstName = "Tony",
             LastName = "Riad",
             Email = "tony@example.com",
@@ -298,7 +300,7 @@ public class BookingServiceTests
             
             CompositeValidator cv = new CompositeValidator(rules);
             RoomService roomService = new(db);
-            BookingService = new BookingService(db,logger,cv,roomService);
+            BookingService = new BookingService(db,logger,cv,roomService,new CustomerService(db));
         }
 
         public AppDbContext Db { get; }
