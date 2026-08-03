@@ -22,7 +22,7 @@ public class BookingMustNotOverlapRule(AppDbContext dbContext): IBookingRule
             return (
                 new ValidationError(
                     Message:" Booking overlapping ",
-                    Exp: new CustomExceptions.OverLappingBookingException() )
+                    Exp: new CustomExceptions.OverlappingBookingException() )
             );
         }
 

@@ -104,11 +104,13 @@ namespace BookingProject.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.HasIndex("HotelId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("CustomerId", "CheckInDate")
+                        .HasDatabaseName("IX_Bookings_CustomerId_CheckInDate");
+
+                    b.HasIndex("RoomId", "CheckInDate", "CheckOutDate")
+                        .HasDatabaseName("IX_Booking_RoomId_CheckInDate_CheckOutDate");
 
                     b.ToTable("Bookings");
                 });

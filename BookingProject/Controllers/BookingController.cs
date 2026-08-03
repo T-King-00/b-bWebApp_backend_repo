@@ -100,7 +100,7 @@ public class BookingController(ILogger<BookingController> logger, BookingService
         (DateOnly parsedCheckInDate,DateOnly parsedCheckOutDate) = help.ParseCheckInOutDates(bookingReqDto.CheckInDate, bookingReqDto.CheckOutDate) !;
         if (parsedCheckInDate == default || parsedCheckOutDate == default)
         {
-            throw new CustomExceptions.InvalidBookingDateTypeException();
+            throw new CustomExceptions.UnsupportedDateTypeValueException();
         }
         // create a raw booking object to send it to the service
         Booking bookingToUpdate = new Booking

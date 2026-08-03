@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260609132445_v1")]
-    partial class v1
+    [Migration("20260728131123_v12")]
+    partial class v12
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,9 +24,6 @@ namespace BookingProject.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Available")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -43,23 +40,40 @@ namespace BookingProject.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Bed");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Available = true,
-                            Quantity = 1,
-                            RoomId = 1,
-                            Type = 0
-                        });
                 });
 
-            modelBuilder.Entity("BookingProject.Booking.Booking", b =>
+            modelBuilder.Entity("BookingProject.Hotel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hotels");
+                });
+
+            modelBuilder.Entity("BookingProject.Models.Booking.Booking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("CheckInDate")
                         .HasColumnType("TEXT");
@@ -67,7 +81,19 @@ namespace BookingProject.Migrations
                     b.Property<DateOnly>("CheckOutDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ModificationDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NumberOfGuests")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("RoomId")
@@ -76,20 +102,27 @@ namespace BookingProject.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("REAL");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("HotelId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("CustomerId", "CheckInDate")
+                        .HasDatabaseName("IX_Bookings_CustomerId_CheckInDate");
+
+                    b.HasIndex("RoomId", "CheckInDate", "CheckOutDate")
+                        .HasDatabaseName("IX_Booking_RoomId_CheckInDate_CheckOutDate");
 
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("BookingProject.Customer", b =>
+            modelBuilder.Entity("BookingProject.Models.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -119,45 +152,7 @@ namespace BookingProject.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("BookingProject.Hotel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("City")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hotels");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Skagen",
-                            Country = "Denmark",
-                            CreationDate = new DateTime(2026, 6, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Danish hotel owned by Pernilles Bed and Breakfast",
-                            Name = "Danish Bed and Breakfast"
-                        });
-                });
-
-            modelBuilder.Entity("BookingProject.Price", b =>
+            modelBuilder.Entity("BookingProject.Models.Price", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,17 +170,9 @@ namespace BookingProject.Migrations
                         .IsUnique();
 
                     b.ToTable("Price");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BasePrice = 100.0,
-                            RoomId = 1
-                        });
                 });
 
-            modelBuilder.Entity("BookingProject.Room", b =>
+            modelBuilder.Entity("BookingProject.Models.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,10 +181,10 @@ namespace BookingProject.Migrations
                     b.Property<int>("HotelId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RoomType")
+                    b.Property<int>("Size")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("size")
+                    b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -205,57 +192,56 @@ namespace BookingProject.Migrations
                     b.HasIndex("HotelId");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            HotelId = 1,
-                            RoomType = 0,
-                            size = 10
-                        });
                 });
 
             modelBuilder.Entity("BookingProject.Bed", b =>
                 {
-                    b.HasOne("BookingProject.Room", null)
+                    b.HasOne("BookingProject.Models.Room", null)
                         .WithMany("Beds")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BookingProject.Booking.Booking", b =>
+            modelBuilder.Entity("BookingProject.Models.Booking.Booking", b =>
                 {
-                    b.HasOne("BookingProject.Customer", "Customer")
+                    b.HasOne("BookingProject.Models.Customer", "Customer")
                         .WithMany("Bookings")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookingProject.Room", "Room")
+                    b.HasOne("BookingProject.Hotel", "Hotel")
                         .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookingProject.Models.Room", "Room")
+                        .WithMany("Booking")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
+                    b.Navigation("Hotel");
+
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("BookingProject.Price", b =>
+            modelBuilder.Entity("BookingProject.Models.Price", b =>
                 {
-                    b.HasOne("BookingProject.Room", "Room")
+                    b.HasOne("BookingProject.Models.Room", "Room")
                         .WithOne("Price")
-                        .HasForeignKey("BookingProject.Price", "RoomId")
+                        .HasForeignKey("BookingProject.Models.Price", "RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("BookingProject.Room", b =>
+            modelBuilder.Entity("BookingProject.Models.Room", b =>
                 {
                     b.HasOne("BookingProject.Hotel", "Hotel")
                         .WithMany("Rooms")
@@ -266,19 +252,21 @@ namespace BookingProject.Migrations
                     b.Navigation("Hotel");
                 });
 
-            modelBuilder.Entity("BookingProject.Customer", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
             modelBuilder.Entity("BookingProject.Hotel", b =>
                 {
                     b.Navigation("Rooms");
                 });
 
-            modelBuilder.Entity("BookingProject.Room", b =>
+            modelBuilder.Entity("BookingProject.Models.Customer", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("BookingProject.Models.Room", b =>
                 {
                     b.Navigation("Beds");
+
+                    b.Navigation("Booking");
 
                     b.Navigation("Price")
                         .IsRequired();

@@ -21,24 +21,24 @@ public class CustomExceptions
         {
         }
     }
-    public sealed class OverLappingBookingException : Exception
+    public sealed class OverlappingBookingException : Exception
     {
-        public OverLappingBookingException()
+        public OverlappingBookingException()
             : base("The same room is  already booked during the requested dates !")
         {
         }
     }
-    public sealed class SameCustomerOverLappingBookingException : Exception
+    public sealed class SameCustomerOverlappingBookingException : Exception
     {
-        public SameCustomerOverLappingBookingException()
+        public SameCustomerOverlappingBookingException()
             : base(" You have another booking on same date range !")
         {
         }
     }
-    
-    public sealed class InvalidBookingDateTypeException : Exception
+    //InvalidBookingDateTypeValueException throws when date variable type sent from frontend side is mismatched with the required one.
+    public sealed class UnsupportedDateTypeValueException : Exception
     {
-        public InvalidBookingDateTypeException()
+        public UnsupportedDateTypeValueException()
             : base("Date type is not supported ! ")
         {
         }

@@ -24,7 +24,7 @@ public class CustomerBookingController(BookingService service,CustomerService cu
         {
             if (parsedCheckInDate == default || parsedCheckOutDate == default)
             {
-                throw new CustomExceptions.InvalidBookingDateTypeException();
+                throw new CustomExceptions.UnsupportedDateTypeValueException();
             }
             //check if customer data is available with request or not
             if (bookingReq.CustomerId == Guid.Empty )

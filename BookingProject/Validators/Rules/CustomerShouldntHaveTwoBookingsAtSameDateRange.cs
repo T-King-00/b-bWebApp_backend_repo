@@ -6,6 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookingProject.Validators;
 
+
+/// <summary>
+///  Customer must not have overlapping bookings at same date range.
+/// </summary>
+/// <param name="dbContext"></param>
+/// 
 public class CustomerShouldntHaveTwoBookingsAtSameDateRangeRule(AppDbContext dbContext):IBookingRule
 {
     public bool AppliesTo(BookingValidationOperation operation)
@@ -25,7 +31,7 @@ public class CustomerShouldntHaveTwoBookingsAtSameDateRangeRule(AppDbContext dbC
             return (
                 new ValidationError(
                     Message:"Another Booking is Found At Same Date Range ",
-                    Exp: new CustomExceptions.SameCustomerOverLappingBookingException()  )
+                    Exp: new CustomExceptions.SameCustomerOverlappingBookingException()  )
             );
         }
         return (null);
@@ -39,8 +45,8 @@ public class CustomerShouldntHaveTwoBookingsAtSameDateRangeRule(AppDbContext dbC
         if (dbContext.Bookings.Any(b =>
                 b.CustomerId == bookingReq.CustomerId &&
                 b.Id != bookingReq.Id &&
-                ( bookingReq.CheckOutDate< b.CheckInDate &&
-                  bookingReq.CheckInDate > b.CheckOutDate )
+                ( bookingReq.CheckOutDate> b.CheckInDate &&
+                  bookingReq.CheckInDate < b.CheckOutDate )
                 ))
         {
             return true;

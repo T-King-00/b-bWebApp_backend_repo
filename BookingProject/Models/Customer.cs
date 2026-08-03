@@ -31,4 +31,5 @@ public class Customer
     public string? PersonalNumber { get; set; }
 
     public ICollection<Booking.Booking> Bookings { get; set; } = [];
+    
 }
