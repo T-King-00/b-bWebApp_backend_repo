@@ -1,0 +1,24 @@
+﻿### Testing api endpoints registering,logging,accessing an endpoint that requires authentication
+###
+
+POST https://localhost:7171/api/user/register
+Content-Type: application/json
+
+{
+  "email": "test@outlook.com",
+  "password": "123Pass@"
+}
+
+###
+POST https://localhost:7171/api/user/login?useCookies=true
+Content-Type: application/json
+
+{
+"email": "test@outlook.com",
+"password": "123Pass@"
+}
+
+
+
+### 
+GET https://localhost:7171/api/user/test/private

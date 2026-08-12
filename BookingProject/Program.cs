@@ -1,6 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 using BookingProject;
+using BookingProject.Controllers.Identity;
 using BookingProject.Database;
+using BookingProject.Endpoints;
 using BookingProject.Exceptions.ExceptionHandler;
 using BookingProject.Services;
 using BookingProject.Validators;
@@ -41,7 +43,11 @@ builder.Services.AddScoped<IBookingRule, BookingNoDuplicateIdRule>();
 builder.Services.AddScoped<IBookingRule, CustomerShouldntHaveTwoBookingsAtSameDateRangeRule>();
 builder.Services.AddScoped<CompositeValidator>();
 
+// authentication, authorization, EntityFrameworkStores
 
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<AppDbContext>();
 
 
 //db
@@ -98,8 +104,13 @@ if (app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     
 }*/
-
-
+app.UseAuthentication();
+app.UseAuthorization();
+var userApiGroup = app.MapGroup("/api/user");
+//adds custom endpoints
+userApiGroup.MapCustomIdentityEndPoints();
+//adds user account endpoints
+userApiGroup.MapIdentityApi<User>();
 
 app.MapControllers();
 app.Run();

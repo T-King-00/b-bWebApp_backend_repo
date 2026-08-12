@@ -446,3 +446,4 @@ C:\Users\tony_\OneDrive - BTH Student\lexicon .NET\project\b&bWebApp\backend\Boo
 C:\Users\tony_\OneDrive - BTH Student\lexicon .NET\project\b&bWebApp\backend\BookingProject\obj\Debug\net10.0\BookingProject.genruntimeconfig.cache
 C:\Users\tony_\OneDrive - BTH Student\lexicon .NET\project\b&bWebApp\backend\BookingProject\obj\Debug\net10.0\ref\BookingProject.dll
 C:\Users\tony_\OneDrive - BTH Student\lexicon .NET\project\b&bWebApp\backend\BookingProject\bin\Debug\net10.0\Database\SeedingData.json
+C:\Users\tony_\OneDrive - BTH Student\lexicon .NET\project\b&bWebApp\backend\BookingProject\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
